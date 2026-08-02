@@ -159,9 +159,11 @@
             const currentUrl = window.location.href;
             const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/'));
             
-            // Link siêu ngắn gọn: /?n=Lan+Anh (dùng dấu + thay cho khoảng trắng để rút gọn url)
-            const encodedName = encodeURIComponent(name).replace(/%20/g, '+');
-            const finalUrl = baseUrl + '/?n=' + encodedName;
+            // Mã hoá tên thành Base64 để tạo cảm giác là một mã rút gọn ngẫu nhiên (ví dụ: #Q0FPIFbEg04=)
+            function utf8_to_b64(str) { return window.btoa(unescape(encodeURIComponent(str))); }
+            const encodedName = utf8_to_b64(name);
+            // Dùng hash (#) để link sạch hơn, bỏ qua phần /1?n= và ẩn đuôi .html
+            const finalUrl = baseUrl + '/1#' + encodedName;
             
             document.getElementById('resultBox').style.display = 'block';
             const linkEl = document.getElementById('generatedLink');
