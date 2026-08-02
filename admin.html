@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Link Mời Khách</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            padding: 20px; 
+            max-width: 600px; 
+            margin: 40px auto; 
+            background-color: #f9fafb;
+            color: #1f2937;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+        }
+        h2 { margin-top: 0; color: #ec4899; text-align: center; }
+        label { font-weight: 600; display: block; margin-bottom: 8px; }
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            margin-bottom: 20px; 
+            box-sizing: border-box; 
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        button { 
+            width: 100%;
+            padding: 12px; 
+            background-color: #ec4899; 
+            color: white; 
+            border: none; 
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer; 
+            transition: background-color 0.2s;
+        }
+        button:hover { background-color: #be185d; }
+        
+        .row-btn {
+            display: flex;
+            gap: 10px;
+        }
+        .row-btn button {
+            flex: 1;
+        }
+
+        .result { 
+            margin-top: 20px; 
+            padding: 20px; 
+            background: #fdf2f8; 
+            border-radius: 8px; 
+            border: 1px solid #fbcfe8;
+            word-break: break-all; 
+            display: none;
+        }
+        .result p { margin-top: 0; font-weight: 600; color: #831843; }
+        #generatedLink { 
+            display: block; 
+            margin-bottom: 15px; 
+            color: #db2777; 
+            text-decoration: none; 
+        }
+        #generatedLink:hover { text-decoration: underline; }
+        .copy-btn { background-color: #10b981; }
+        .copy-btn:hover { background-color: #059669; }
+
+        .history-list {
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+        }
+        .history-item {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        .history-item-info {
+            flex: 1;
+        }
+        .guest-name { font-weight: 600; color: #111827; }
+        .guest-time { font-size: 12px; color: #6b7280; margin-top: 4px; }
+        .copy-mini {
+            padding: 6px 12px;
+            font-size: 13px;
+            width: auto;
+            background-color: #10b981;
+        }
+        .header-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .stats-badge {
+            background: #fce7f3;
+            color: #be185d;
+            padding: 4px 10px;
+            border-radius: 99px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Tạo Link Thiệp Mời Riêng Biết</h2>
+        <label for="guestName">Nhập tên khách mời:</label>
+        <input type="text" id="guestName" placeholder="Điền Tên Khách Mời">
+        <button onclick="generate()">Phát Hành Link Mời</button>
+
+        <div class="result" id="resultBox">
+            <p>Link gửi cho khách mời:</p>
+            <a id="generatedLink" href="#" target="_blank"></a>
+            <button class="copy-btn" onclick="copyLink()">📋 Copy Link</button>
+        </div>
+    </div>
+
+    <div class="container" id="historyContainer" style="display: none;">
+        <div class="header-stats">
+            <h2 style="margin: 0;">Lịch Sử Lời Mời</h2>
+            <div class="stats-badge" id="statsCount">0 khách</div>
+        </div>
+        <p style="font-size: 14px; color: #4b5563; margin-top: 0;">Danh sách này được lưu tự động trên trình duyệt hiện tại.</p>
+        <div class="history-list" id="historyList">
+            <!-- Danh sách history đổ vào đây -->
+        </div>
+        <button style="background-color: #ef4444; margin-top: 15px; padding: 10px;" onclick="clearHistory()">Xoá Lịch Sử</button>
+    </div>
+
+    <script>
+        // Load lịch sử từ localStorage
+        let history = JSON.parse(localStorage.getItem('wedding_invites_history') || '[]');
+        renderHistory();
+
+        function generate() {
+            const name = document.getElementById('guestName').value.trim();
+            if(!name) {
+                alert('Vui lòng nhập tên khách mời!');
+                return;
+            }
+            
+            // Xây dựng link ngắn gọn sử dụng tham số "n" thay vì "name"
+            const currentUrl = window.location.href;
+            const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/'));
+            
+            // Link siêu ngắn gọn: /?n=Lan+Anh (dùng dấu + thay cho khoảng trắng để rút gọn url)
+            const encodedName = encodeURIComponent(name).replace(/%20/g, '+');
+            const finalUrl = baseUrl + '/?n=' + encodedName;
+            
+            document.getElementById('resultBox').style.display = 'block';
+            const linkEl = document.getElementById('generatedLink');
+            linkEl.href = finalUrl;
+            linkEl.innerText = finalUrl;
+
+            // Lưu vào thống kê lịch sử lô cồ máy
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' ' + now.toLocaleDateString('vi-VN');
+            
+            // Thêm vào đầu danh sách
+            history.unshift({ name, link: finalUrl, time: timeString });
+            localStorage.setItem('wedding_invites_history', JSON.stringify(history));
+            
+            renderHistory();
+            document.getElementById('guestName').value = '';
+            document.getElementById('guestName').focus();
+        }
+
+        function copyLink() {
+            const text = document.getElementById('generatedLink').innerText;
+            copyToClipboard(text);
+        }
+
+        function copyHistoryLink(idx) {
+            if (history[idx] && history[idx].link) {
+                copyToClipboard(history[idx].link);
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Đã copy link thành công! Bạn có thể dán (Ctrl+V) để gửi cho khách.');
+            }).catch(err => {
+                alert('Không thể copy tự động, vui lòng chọn link và copy thủ công.');
+            });
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('historyContainer');
+            if (history.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+            container.style.display = 'block';
+            document.getElementById('statsCount').innerText = history.length + ' khách';
+
+            let html = '';
+            history.forEach((item, idx) => {
+                html += `
+                <div class="history-item">
+                    <div class="history-item-info">
+                        <div class="guest-name">${item.name}</div>
+                        <div class="guest-time">${item.time}</div>
+                    </div>
+                    <button class="copy-mini" onclick="copyHistoryLink(${idx})">📋 Copy</button>
+                </div>`;
+            });
+            document.getElementById('historyList').innerHTML = html;
+        }
+
+        function clearHistory() {
+            if (confirm('Bạn có chắc chắn muốn xoá toàn bộ thống kê lịch sử lời mời không?')) {
+                history = [];
+                localStorage.removeItem('wedding_invites_history');
+                renderHistory();
+                document.getElementById('resultBox').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

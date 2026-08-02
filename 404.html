@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Không Tìm Thấy Trang</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Nunito:wght@400;600;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fdf2f8; /* Soft pink background */
+            font-family: 'Nunito', sans-serif;
+            color: #27314c; /* Navy blue */
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.1); /* Pink shadow */
+            margin: 20px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .error-code {
+            font-family: 'Lora', serif;
+            font-size: 120px;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(135deg, #ec4899, #be185d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        h2 {
+            font-family: 'Lora', serif;
+            font-size: 28px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            color: #27314c;
+        }
+
+        p {
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .btn-home {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #ec4899;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+        }
+
+        .btn-home:hover {
+            background-color: #be185d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .heart {
+            color: #ec4899;
+            display: inline-block;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="error-code">404</h1>
+        <h2>Ôi không! Lạc đường rồi <span class="heart">❤️</span></h2>
+        <p>Trang bạn đang tìm kiếm có thể đã bị xóa, đổi tên, hoặc tạm thời không thể truy cập được. Đừng lo, hãy quay lại bến đỗ an toàn nhé!</p>
+        <a href="index.html" class="btn-home">Quay Lại Trang Chủ</a>
+    </div>
+</body>
+</html>
