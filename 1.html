@@ -2162,16 +2162,7 @@ html {
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const urlParams = new URLSearchParams(window.location.search);
-        let guestName = urlParams.get('n') || urlParams.get('name');
-        
-        // Đọc tên khách mời từ Hash (#) Base64 nếu có
-        if (!guestName && window.location.hash) {
-            try {
-                let hashStr = window.location.hash.substring(1);
-                guestName = decodeURIComponent(escape(window.atob(hashStr)));
-            } catch (e) { console.error("Lỗi giải mã hash", e); }
-        }
-
+        const guestName = urlParams.get('n') || urlParams.get('name');
         if (guestName) {
             const nameElement = document.querySelector('[data-node-id="element_text_dsj16yifbfz"]');
             if (nameElement) {
